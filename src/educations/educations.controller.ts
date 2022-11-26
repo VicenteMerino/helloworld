@@ -11,8 +11,6 @@ import {
   HttpStatus,
   UsePipes,
   ValidationPipe,
-  HttpException,
-  UseFilters,
 } from '@nestjs/common';
 import { CreateEducationsDto } from './dto/create-educations.dto';
 import { UpdateEducationsDto } from './dto/update-educations.dto';
