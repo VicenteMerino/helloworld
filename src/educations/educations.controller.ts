@@ -9,8 +9,13 @@ import {
   Body,
   Res,
   HttpStatus,
+  UsePipes,
+  ValidationPipe,
+  HttpException,
+  UseFilters,
 } from '@nestjs/common';
-import { EducationsDto } from './dto/educations.dto';
+import { CreateEducationsDto } from './dto/create-educations.dto';
+import { UpdateEducationsDto } from './dto/update-educations.dto';
 import { EducationsService } from './educations.service';
 
 @Controller('educations')
@@ -27,15 +32,16 @@ export class EducationsController {
     return await this.educationsService.getEducation(educationId);
   }
 
+  @UsePipes(ValidationPipe)
   @Post()
-  async create(@Body() educationsDto: EducationsDto) {
+  async create(@Body() educationsDto: CreateEducationsDto) {
     return await this.educationsService.createEducation(educationsDto);
   }
 
   @Patch(':educationId')
   async update(
     @Param('educationId') educationId: string,
-    @Body() educationsDto: EducationsDto,
+    @Body() educationsDto: UpdateEducationsDto,
   ) {
     return await this.educationsService.updateEducation(
       educationId,
@@ -46,7 +52,7 @@ export class EducationsController {
   @Put(':educationId')
   async replace(
     @Param('educationId') educationId: string,
-    @Body() educationsDto: EducationsDto,
+    @Body() educationsDto: CreateEducationsDto,
     @Res() res,
   ) {
     const result = await this.educationsService.replaceEducation(

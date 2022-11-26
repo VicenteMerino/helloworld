@@ -1,23 +1,25 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
-@Schema()
+// validate on update
+@Schema({ timestamps: true, validateBeforeSave: true })
 export class Education {
-  @Prop()
+  @Prop({ required: true })
   school: string;
 
-  @Prop()
+  @Prop({ required: true })
   degree: string;
 
-  @Prop()
-  fieldofstudy: string;
+  @Prop({ required: true })
+  fieldOfStudy: string;
 
-  @Prop()
+  // add regex in format YYYY-MM-DD
+  @Prop({ required: true, match: /^\d{4}-\d{2}-\d{2}$/ })
   from: string;
 
-  @Prop()
+  @Prop({ required: true, match: /^\d{4}-\d{2}-\d{2}$/ })
   to: string;
 
-  @Prop()
+  @Prop({ required: true })
   description: string;
 }
 
