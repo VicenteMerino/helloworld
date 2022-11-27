@@ -1,17 +1,4 @@
-import { Matches } from 'class-validator';
+import { CreateEducationsDto } from './create-educations.dto';
+import { PartialType } from '@nestjs/swagger';
 
-export class UpdateEducationsDto {
-  school: string;
-  degree: string;
-  fieldOfStudy: string;
-  // add regex in format YYYY-MM-DD
-  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
-    message: 'Please enter a valid date in format YYYY-MM-DD',
-  })
-  from: string;
-  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
-    message: 'Please enter a valid date in format YYYY-MM-DD',
-  })
-  to: string;
-  description: string;
-}
+export class UpdateEducationsDto extends PartialType(CreateEducationsDto) {}

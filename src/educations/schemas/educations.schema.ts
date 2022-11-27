@@ -9,13 +9,13 @@ export class Education {
   degree: string;
 
   @Prop({ required: true })
-  fieldOfStudy: string;
+  grade: number;
 
   @Prop({ required: true, match: /^\d{4}-\d{2}-\d{2}$/ })
-  from: string;
+  beginData: Date;
 
   @Prop({ required: true, match: /^\d{4}-\d{2}-\d{2}$/ })
-  to: string;
+  endDate: Date;
 
   @Prop({ required: true })
   description: string;
