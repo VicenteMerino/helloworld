@@ -6,6 +6,9 @@ import {
   Delete,
   Param,
   Body,
+  HttpCode,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { CreateExperiencesDto } from './dto/create-experiences.dto';
 import { UpdateExperiencesDto } from './dto/update-experiences.dto';
@@ -14,9 +17,12 @@ import { IExperience } from './experiences.interface';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
+import { NotFoundDto } from 'src/generic-dto/not-found.dto';
 
 @ApiTags('experiences')
 @Controller('experiences')
@@ -36,11 +42,20 @@ export class ExperiencesController {
     description: 'Get experience by id',
     type: CreateExperiencesDto,
   })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundDto,
+  })
   @Get(':experienceId')
   async findOne(
     @Param('experienceId') experienceId: string,
-  ): Promise<IExperience> {
-    return await this.experiencesService.getExperience(experienceId);
+    @Res() response: Response,
+  ): Promise<Response> {
+    const result = await this.experiencesService.getExperience(experienceId);
+    if (result) {
+      return response.status(HttpStatus.OK).send(result);
+    }
+    return response.status(HttpStatus.NOT_FOUND).send({ message: 'Not found' });
   }
 
   @ApiCreatedResponse({
@@ -70,10 +85,19 @@ export class ExperiencesController {
   }
 
   @ApiNoContentResponse({ description: 'Delete experience' })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundDto,
+  })
   @Delete(':experienceId')
   async delete(
     @Param('experienceId') experienceId: string,
-  ): Promise<IExperience> {
-    return await this.experiencesService.deleteExperience(experienceId);
+    @Res() response: Response,
+  ): Promise<Response> {
+    const result = await this.experiencesService.deleteExperience(experienceId);
+    if (result) {
+      return response.status(HttpStatus.NO_CONTENT).send();
+    }
+    return response.status(HttpStatus.NOT_FOUND).send({ message: 'Not found' });
   }
 }
