@@ -12,7 +12,7 @@ export class Education {
   grade: number;
 
   @Prop({ required: true, match: /^\d{4}-\d{2}-\d{2}$/ })
-  beginData: Date;
+  beginDate: Date;
 
   @Prop({ required: true, match: /^\d{4}-\d{2}-\d{2}$/ })
   endDate: Date;

@@ -5,7 +5,7 @@ export interface IEducation extends Document {
   readonly school: string;
   readonly degree: string;
   readonly grade: number;
-  readonly beginData: Date;
+  readonly beginDate: Date;
   readonly endDate: Date;
   readonly description: string;
 }

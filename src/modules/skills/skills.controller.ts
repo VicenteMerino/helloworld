@@ -6,9 +6,7 @@ import {
   Delete,
   Param,
   Body,
-  HttpCode,
-  HttpStatus,
-  Res,
+  NotFoundException,
 } from '@nestjs/common';
 
 import { CreateSkillsDto } from './dto/create-skills.dto';
@@ -22,8 +20,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
-import { NotFoundDto } from 'src/generic-dto/not-found.dto';
+import { NotFoundDto } from '../../generic-dto/not-found.dto';
 
 @ApiTags('skills')
 @Controller('skills')
@@ -48,15 +45,12 @@ export class SkillsController {
     type: NotFoundDto,
   })
   @Get(':skillId')
-  async findOne(
-    @Param('skillId') skillId: string,
-    @Res() response: Response,
-  ): Promise<Response> {
+  async findOne(@Param('skillId') skillId: string): Promise<ISkill> {
     const result = await this.skillsService.getSkill(skillId);
-    if (result) {
-      return response.status(HttpStatus.OK).send(result);
+    if (!result) {
+      throw new NotFoundException();
     }
-    return response.status(HttpStatus.NOT_FOUND).send();
+    return result;
   }
 
   @ApiCreatedResponse({
@@ -72,12 +66,20 @@ export class SkillsController {
     description: 'Update skill',
     type: CreateSkillsDto,
   })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundDto,
+  })
   @Patch(':skillId')
   async update(
     @Param('skillId') skillId: string,
     @Body() skillsDto: UpdateSkillsDto,
   ): Promise<ISkill> {
-    return await this.skillsService.updateSkill(skillId, skillsDto);
+    const result = await this.skillsService.updateSkill(skillId, skillsDto);
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 
   @ApiNoContentResponse({
@@ -88,14 +90,11 @@ export class SkillsController {
     type: NotFoundDto,
   })
   @Delete(':skillId')
-  async delete(
-    @Param('skillId') skillId: string,
-    @Res() response: Response,
-  ): Promise<Response> {
+  async delete(@Param('skillId') skillId: string): Promise<void> {
     const result = await this.skillsService.deleteSkill(skillId);
-    if (result) {
-      return response.status(HttpStatus.NO_CONTENT).send();
+    if (!result) {
+      throw new NotFoundException();
     }
-    return response.status(HttpStatus.NOT_FOUND).send({ message: 'Not found' });
+    return;
   }
 }

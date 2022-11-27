@@ -32,15 +32,6 @@ export class EducationsService {
     });
   }
 
-  async replaceEducation(id: string, educationsDto: CreateEducationsDto) {
-    return await this.educationsModel.findByIdAndUpdate(id, educationsDto, {
-      new: true,
-      upsert: true,
-      rawResult: true,
-      runValidators: true,
-    });
-  }
-
   async deleteEducation(id: string) {
     return await this.educationsModel.findByIdAndRemove(id);
   }

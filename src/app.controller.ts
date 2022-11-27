@@ -13,7 +13,7 @@ export class AppController {
     type: HealthCheckResponse,
   })
   @Get()
-  getHello(): { status: string } {
+  getHealthCheck(): { status: string } {
     return this.appService.healthCheck();
   }
 }

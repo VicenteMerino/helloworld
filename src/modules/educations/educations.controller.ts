@@ -6,8 +6,9 @@ import {
   Delete,
   Param,
   Body,
-  Res,
   HttpStatus,
+  NotFoundException,
+  HttpCode,
 } from '@nestjs/common';
 import { CreateEducationsDto } from './dto/create-educations.dto';
 import { UpdateEducationsDto } from './dto/update-educations.dto';
@@ -20,8 +21,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
-import { NotFoundDto } from 'src/generic-dto/not-found.dto';
+import { NotFoundDto } from '../../generic-dto/not-found.dto';
 
 @ApiTags('educations')
 @Controller('educations')
@@ -48,13 +48,12 @@ export class EducationsController {
   @Get(':educationId')
   async findOne(
     @Param('educationId') educationId: string,
-    @Res() response: Response,
-  ): Promise<Response> {
+  ): Promise<IEducation> {
     const result = await this.educationsService.getEducation(educationId);
-    if (result) {
-      return response.status(HttpStatus.OK).send(result);
+    if (!result) {
+      throw new NotFoundException();
     }
-    return response.status(HttpStatus.NOT_FOUND).send({ message: 'Not found' });
+    return result;
   }
 
   @ApiCreatedResponse({
@@ -72,15 +71,23 @@ export class EducationsController {
     description: 'Update education background',
     type: UpdateEducationsDto,
   })
+  @ApiNotFoundResponse({
+    description: 'Education background not found',
+    type: NotFoundDto,
+  })
   @Patch(':educationId')
   async update(
     @Param('educationId') educationId: string,
     @Body() educationsDto: UpdateEducationsDto,
   ): Promise<IEducation> {
-    return await this.educationsService.updateEducation(
+    const result = await this.educationsService.updateEducation(
       educationId,
       educationsDto,
     );
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 
   @Delete(':educationId')
@@ -91,14 +98,12 @@ export class EducationsController {
     description: 'Education background not found',
     type: NotFoundDto,
   })
-  async delete(
-    @Res() res: Response,
-    @Param('educationId') educationId: string,
-  ): Promise<Response> {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@Param('educationId') educationId: string): Promise<void> {
     const result = await this.educationsService.deleteEducation(educationId);
-    if (result) {
-      return res.status(HttpStatus.NO_CONTENT).send();
+    if (!result) {
+      throw new NotFoundException();
     }
-    return res.status(HttpStatus.NOT_FOUND).send({ message: 'Not found' });
+    return;
   }
 }

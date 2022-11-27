@@ -33,7 +33,7 @@ export class CreateEducationsDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'Please enter a valid date in format YYYY-MM-DD',
   })
-  beginData: Date;
+  beginDate: Date;
   @ApiProperty({
     required: true,
     example: '2020-01-01',

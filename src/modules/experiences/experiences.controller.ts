@@ -6,9 +6,7 @@ import {
   Delete,
   Param,
   Body,
-  HttpCode,
-  HttpStatus,
-  Res,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateExperiencesDto } from './dto/create-experiences.dto';
 import { UpdateExperiencesDto } from './dto/update-experiences.dto';
@@ -21,8 +19,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
-import { NotFoundDto } from 'src/generic-dto/not-found.dto';
+import { NotFoundDto } from '../../generic-dto/not-found.dto';
 
 @ApiTags('experiences')
 @Controller('experiences')
@@ -49,13 +46,12 @@ export class ExperiencesController {
   @Get(':experienceId')
   async findOne(
     @Param('experienceId') experienceId: string,
-    @Res() response: Response,
-  ): Promise<Response> {
+  ): Promise<IExperience> {
     const result = await this.experiencesService.getExperience(experienceId);
-    if (result) {
-      return response.status(HttpStatus.OK).send(result);
+    if (!result) {
+      throw new NotFoundException();
     }
-    return response.status(HttpStatus.NOT_FOUND).send({ message: 'Not found' });
+    return result;
   }
 
   @ApiCreatedResponse({
@@ -73,15 +69,23 @@ export class ExperiencesController {
     description: 'Update experience',
     type: CreateExperiencesDto,
   })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundDto,
+  })
   @Patch(':experienceId')
   async update(
     @Param('experienceId') experienceId: string,
     @Body() experiencesDto: UpdateExperiencesDto,
   ): Promise<IExperience> {
-    return await this.experiencesService.updateExperience(
+    const result = await this.experiencesService.updateExperience(
       experienceId,
       experiencesDto,
     );
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 
   @ApiNoContentResponse({ description: 'Delete experience' })
@@ -90,14 +94,11 @@ export class ExperiencesController {
     type: NotFoundDto,
   })
   @Delete(':experienceId')
-  async delete(
-    @Param('experienceId') experienceId: string,
-    @Res() response: Response,
-  ): Promise<Response> {
+  async delete(@Param('experienceId') experienceId: string): Promise<void> {
     const result = await this.experiencesService.deleteExperience(experienceId);
-    if (result) {
-      return response.status(HttpStatus.NO_CONTENT).send();
+    if (!result) {
+      throw new NotFoundException();
     }
-    return response.status(HttpStatus.NOT_FOUND).send({ message: 'Not found' });
+    return;
   }
 }
