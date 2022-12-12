@@ -18,4 +18,4 @@ jobs:
         run: docker build --target development .
 
       - name: Run tests
-        run: docker-compose -f config/docker-compose.test.yml run testing
+        run: docker-compose -f docker-compose.test.yaml run testing
