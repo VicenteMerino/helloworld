@@ -118,8 +118,6 @@ describe('EducationController', () => {
         grade: 2,
         beginDate: new Date(),
       };
-      console.log(educationFactory.id);
-      console.log(educationFactory);
       const result = await controller.update(educationFactory.id, patchedData);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id: _id, ...expectedResponse } = {

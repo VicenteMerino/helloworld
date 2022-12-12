@@ -8,6 +8,9 @@ processes = []
 [env]
   PORT = "8080"
 
+[build]
+  build-target = "production"
+
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
