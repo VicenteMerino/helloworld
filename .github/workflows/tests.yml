@@ -14,5 +14,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Start docker containers
-        run: docker build --target development . && docker-compose -f docker-compose.test.yaml run testing
+      - name: Test with Docker
+        run: docker-compose -f docker-compose.test.yaml up --build
