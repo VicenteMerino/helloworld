@@ -13,11 +13,11 @@ export class ExperiencesService {
   ) {}
 
   async getExperiences() {
-    return await this.experiencesModel.find().exec();
+    return await this.experiencesModel.find();
   }
 
   async getExperience(id: string) {
-    return await this.experiencesModel.findById(id).exec();
+    return await this.experiencesModel.findById(id);
   }
 
   async createExperience(experiencesDto: CreateExperiencesDto) {
