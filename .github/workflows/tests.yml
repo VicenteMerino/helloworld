@@ -19,14 +19,12 @@ jobs:
         with:
           node-version: 19
 
-      - name: Install dependencies
-        run: npm install
-
       - uses: ArtiomTr/jest-coverage-report-action@v2
         id: coverage
         with:
           output: report-markdown
-          skip-step: install
+          coverage-file: report.json
+          base-coverage-file: report.json
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: ${{ steps.coverage.outputs.report }}
