@@ -13,11 +13,11 @@ export class SkillsService {
   ) {}
 
   async getSkills() {
-    return await this.skillsModel.find().exec();
+    return await this.skillsModel.find();
   }
 
   async getSkill(id: string) {
-    return await this.skillsModel.findById(id).exec();
+    return await this.skillsModel.findById(id);
   }
 
   async createSkill(skillsDto: CreateSkillsDto) {

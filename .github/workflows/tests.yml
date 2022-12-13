@@ -14,8 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Start docker containers
-        run: docker build --target development .
+      - name: Set up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 19
 
-      - name: Run tests
-        run: docker-compose -f docker-compose.test.yaml run testing
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        id: coverage
+        with:
+          output: report-markdown
+          coverage-file: report.json
+          base-coverage-file: report.json
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: ${{ steps.coverage.outputs.report }}

@@ -13,11 +13,11 @@ export class EducationsService {
   ) {}
 
   async getEducations() {
-    return await this.educationsModel.find().exec();
+    return await this.educationsModel.find();
   }
 
   async getEducation(id: string) {
-    return await this.educationsModel.findById(id).exec();
+    return await this.educationsModel.findById(id);
   }
 
   async createEducation(educationsDto: CreateEducationsDto) {
